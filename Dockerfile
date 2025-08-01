@@ -7,7 +7,6 @@ WORKDIR /app
 RUN apt-get update && \
     apt-get install -y git && \
     pip install --no-cache-dir requests && \
-    apt-get remove -y git && \
     apt-get autoremove -y && \
     rm -rf /var/lib/apt/lists/*
 
@@ -16,8 +15,10 @@ RUN git clone --depth=1 https://github.com/IncubusVictim/HDHomeRunEPG-to-XmlTv.g
     mv repo/HDHomeRunEPG_To_XmlTv.py ./ && \
     rm -rf repo
 
-# Add loop runner
-COPY run_epg_loop.sh .
-RUN chmod +x run_epg_loop.sh
+RUN apt-get remove -y git
 
-ENTRYPOINT ["./run_epg_loop.sh"]
+# Add loop runner
+COPY entry.sh .
+RUN chmod +x entry.sh
+
+ENTRYPOINT ["./entry.sh"]
