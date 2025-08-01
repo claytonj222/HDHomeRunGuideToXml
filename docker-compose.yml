@@ -1,0 +1,14 @@
+version: "3.8"
+services:
+  epg:
+    image: hdhomerunguide-to-xml
+    container_name: hdhomerunguide_xml
+    restart: always
+    volumes:
+      - ./epg:/output
+    network_mode: host
+    environment:
+      HOST: "YOUR IP"
+      FILENAME: "/output/tvguide.xml"
+      DAYS: "7"
+      HOURS: "4"
