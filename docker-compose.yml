@@ -1,8 +1,8 @@
 version: "3.8"
 services:
   epg:
-    image: hdhomerunguide-to-xml
-    container_name: hdhomerunguide_xml
+    image: hdhomerunguideimage
+    container_name: hdhomerunguide_container
     restart: always
     volumes:
       - ./epg:/output
