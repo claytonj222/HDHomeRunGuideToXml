@@ -3,6 +3,7 @@ Docker Image for HDHomeRunEPG-to-XmlTv
 
 Commands:
 
-docker build -t hdhomerunguide_container-latest .
-docker run -d --name epg hdhomerunguide_container-latest
+docker build -t hdhomerunguide-to-xml:latest .
+docker run --name epg hdhomerunguide-to-xml
+docker compose up -d
 
