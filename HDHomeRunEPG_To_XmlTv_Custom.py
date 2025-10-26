@@ -59,7 +59,7 @@ def fetch_channels(host: str, device_auth: str) -> list:
     return channel_data
 
 def fetch_epg_data(device_auth: str, channels: str, days: int, hours: int) -> list:
-    """Fetch EPG data for a specific channel via POST to HDHomeRun API."""
+    """Fetch EPG data for a specific channel via GET to HDHomeRun API."""
     epg_data = {}
     epg_data["channels"] = []
     epg_data["programmes"] = []
