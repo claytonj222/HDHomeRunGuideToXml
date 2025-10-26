@@ -2,7 +2,6 @@ FROM python:3.12-slim
 
 WORKDIR /app
 
-# Install git
 RUN apt-get update && apt-get install -y git && rm -rf /var/lib/apt/lists/*
 
 # Clone your script
@@ -10,34 +9,31 @@ RUN git clone --depth=1 https://github.com/IncubusVictim/HDHomeRunEPG-to-XmlTv.g
     mv repo/HDHomeRunEPG_To_XmlTv.py ./ && \
     rm -rf repo
 
-# --- AUTO-DETECT AND INSTALL DEPENDENCIES ---
+# Let pip install everything the script actually imports by trying to run it
+# If an ImportError occurs, install that module and retry until it runs
 RUN python - <<'PYCODE'
-import subprocess, sys, re
-from pathlib import Path
+import runpy, subprocess, sys, importlib
 
-code = Path("HDHomeRunEPG_To_XmlTv.py").read_text()
-imports = set(re.findall(r'^\s*(?:from|import)\s+([\w\.]+)', code, re.MULTILINE))
-
-failed = []
-for mod in imports:
-    root = mod.split('.')[0]
+while True:
     try:
-        __import__(root)
-    except ModuleNotFoundError:
-        failed.append(root)
-
-if failed:
-    print("Installing missing modules:", failed)
-    subprocess.check_call([sys.executable, "-m", "pip", "install", "--no-cache-dir", *failed])
-else:
-    print("All imports already satisfied.")
+        runpy.run_path("HDHomeRunEPG_To_XmlTv.py", run_name="__main__")
+        break
+    except ModuleNotFoundError as e:
+        pkg = e.name
+        print(f"Installing missing dependency: {pkg}")
+        subprocess.check_call([sys.executable, "-m", "pip", "install", "--no-cache-dir", pkg])
+    except SystemExit:
+        # script calls sys.exit(); treat as success
+        break
+    except Exception as e:
+        # any other runtime error should break to avoid endless loop
+        print("Non-import error during detection:", e)
+        break
 PYCODE
-# --------------------------------------------
 
 # Clean up
 RUN apt-get remove -y git && apt-get autoremove -y && rm -rf /var/lib/apt/lists/*
 
-# Add runner
 COPY entry.sh .
 RUN chmod +x entry.sh
 
