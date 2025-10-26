@@ -1,7 +1,7 @@
 services:
   epg:
     build:
-      context: .            # Directory containing Dockerfile
+      context: .
       dockerfile: Dockerfile
     container_name: hdhomerunguide_xml
     restart: always
