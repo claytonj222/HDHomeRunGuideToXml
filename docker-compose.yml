@@ -1,7 +1,8 @@
-version: "3.8"
 services:
   epg:
-    image: hdhomerunguide-to-xml
+    build:
+      context: .            # Directory containing Dockerfile
+      dockerfile: Dockerfile
     container_name: hdhomerunguide_xml
     restart: always
     volumes:
