@@ -32,10 +32,10 @@ for mod in imports:
             to_install.append(root)
 
 if to_install:
-    print("📦 Installing detected external modules:", to_install)
+    print("Installing detected external modules:", to_install)
     subprocess.check_call([sys.executable, "-m", "pip", "install", "--no-cache-dir", *to_install])
 else:
-    print("✅ No external dependencies found")
+    print("No external dependencies found")
 PYCODE
 
 # Clean up
